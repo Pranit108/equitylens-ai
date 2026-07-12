@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import ResearchChat from "@/components/ResearchChat";
+import ResearchPulse from "@/components/ResearchPulse";
 
 export default function CompanyPage() {
   const params = useParams();
@@ -10,6 +11,8 @@ export default function CompanyPage() {
 
   const [summary, setSummary] = useState("Loading AI Summary...");
   const [questions, setQuestions] = useState<string[]>([]);
+
+  const [selectedTopic, setSelectedTopic] = useState("");
 
   useEffect(() => {
     async function loadCompanyData() {
@@ -91,7 +94,7 @@ Return JSON only.
         {company}
       </h1>
 
-      <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-6">
+      {/*<div className="rounded-xl border border-zinc-800 bg-zinc-900 p-6">
         <h2 className="text-xl font-semibold mb-4">
           AI Summary
         </h2>
@@ -99,7 +102,14 @@ Return JSON only.
         <p className="text-zinc-300 whitespace-pre-wrap">
           {summary}
         </p>
-      </div>
+      </div>*/}
+
+      <ResearchPulse 
+        company={company}
+        onTopicClick={setSelectedTopic}
+         />
+
+        
 
       <div className="mt-8">
         <h2 className="text-xl font-semibold mb-4">
@@ -117,7 +127,9 @@ Return JSON only.
           ))}
         </div>
       </div>
-      <ResearchChat company={company} />
+      <ResearchChat 
+      company={company}
+      initialPrompt={selectedTopic} />
     </main>
   );
 }

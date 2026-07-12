@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import {useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 
 interface ResearchChatProps {
   company: string;
+  initialPrompt: string;
 }
 
 interface Message {
@@ -12,15 +13,26 @@ interface Message {
   content: string;
 }
 
-export default function ResearchChat({ company }: ResearchChatProps) {
+export default function ResearchChat({ 
+  company,
+  initialPrompt
+  }: ResearchChatProps) {
+
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
 
-  async function sendMessage() {
-  if (!input.trim()) return;
+  useEffect(() => {
+  if (!initialPrompt) return;
 
-  const question = input;
+  setInput(initialPrompt);
+  sendMessage(initialPrompt);
+}, [initialPrompt]);
+
+  async function sendMessage(customQuestion?: string) {
+    const question = customQuestion ?? input;
+
+    if (!question.trim()) return;
 
   const userMessage: Message = {
     role: "user",
@@ -144,7 +156,7 @@ Keep the answer:
         />
 
         <button
-          onClick={sendMessage}
+          onClick={() => sendMessage()}
           className="rounded-lg bg-blue-600 px-6 py-3 font-medium hover:bg-blue-700 transition"
         >
           Send
