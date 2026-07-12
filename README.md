@@ -1,36 +1,121 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# EquityLens AI
 
-## Getting Started
+AI-powered equity research platform built with Next.js and Gemini.
 
-First, run the development server:
+**Live Demo:** https://equitylens-hnm6e8g8z-pranitberry.vercel.app/
+
+---
+
+## Features
+
+- 🔍 Search any public company
+- 🔥 AI-generated Research Pulse
+- 💬 Institutional-style Research Chat
+- 💡 Suggested research questions
+- 📈 Bull vs Bear investment themes
+- 🏷 Trending investment topics
+- 🤖 Powered by Google Gemini
+
+---
+
+## Tech Stack
+
+- Next.js 15 (App Router)
+- TypeScript
+- Tailwind CSS
+- Google Gemini API
+- React Markdown
+- Vercel
+
+---
+
+## Screenshots
+
+*(Add screenshots here later.)*
+
+---
+
+## Running Locally
+
+Clone the repository:
+
+```bash
+git clone https://github.com/Pranit108/equitylens-ai.git
+cd equitylens-ai
+```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Create a `.env.local` file:
+
+```env
+GEMINI_API_KEY=your_api_key_here
+```
+
+Start the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## Roadmap
 
-To learn more about Next.js, take a look at the following resources:
+### ✅ Current
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Company Search
+- AI Research Pulse
+- AI Research Chat
+- Suggested Questions
+- Gemini Integration
+- Responsive UI
+- Vercel Deployment
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 🚧 In Progress
 
-## Deploy on Vercel
+- Interactive Suggested Questions
+- Research Pulse → Chat integration
+- Company Overview improvements
+- Better loading states
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 🔮 Planned
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Company Financial Metrics
+- Interactive Stock Charts
+- Company Disclosures
+- Earnings Call Analysis
+- News Integration
+- Reddit Research
+- ValuePickr Discussions
+- Personal Investing Notes
+- Portfolio Watchlist
+- RAG over Annual Reports
+
+---
+
+## Inspiration
+
+EquityLens aims to provide a modern AI-first equity research experience by combining:
+
+- Institutional research workflows
+- Large Language Models
+- Financial disclosures
+- Community insights
+- Interactive exploration
+
+---
+
+## License
+
+MIT
