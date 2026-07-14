@@ -1,29 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
-import { ai } from "@/lib/gemini";
+import { aiErrorResponse } from "@/lib/api-error";
+import { generateContent } from "@/lib/generate-content";
 import { researchPulsePrompt } from "@/lib/prompts";
 
 export async function POST(req: NextRequest) {
+  try {
+    const { company } = await req.json();
 
-    try {
-        const {company} = await req.json();
-
-        const prompt = researchPulsePrompt(company);
-
-        const response = await ai.models.generateContent({
-
-            model: "gemini-flash-latest",
-            contents: prompt,
-        });
-
-        return NextResponse.json({
-            text: response.text,
-        });
-} catch (error) {
-    console.error(error);
-
-    return NextResponse.json(
-        {error : "Something went wrong"},
-        {status: 500}
-    );
+    if (!company) {
+      return NextResponse.json(
+        { error: "company is required." },
+        { status: 400 }
+      );
     }
+
+    const text = await generateContent(researchPulsePrompt(company));
+
+    return NextResponse.json({ text });
+  } catch (error) {
+    return aiErrorResponse(error);
+  }
 }

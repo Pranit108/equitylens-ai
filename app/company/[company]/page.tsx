@@ -4,88 +4,54 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import ResearchChat from "@/components/ResearchChat";
 import ResearchPulse from "@/components/ResearchPulse";
+import { formatAiError, postAi } from "@/lib/fetch-ai";
 
 export default function CompanyPage() {
   const params = useParams();
   const company = decodeURIComponent(params.company as string);
 
-  const [summary, setSummary] = useState("Loading AI Summary...");
   const [questions, setQuestions] = useState<string[]>([]);
-
+  const [questionsError, setQuestionsError] = useState("");
   const [selectedTopic, setSelectedTopic] = useState("");
 
   useEffect(() => {
+    let cancelled = false;
+
     async function loadCompanyData() {
+      setQuestionsError("");
+
+      const { ok, data } = await postAi("/api/ai", {
+        company,
+        question:
+          "Generate an overview and 8 suggested investor questions.",
+      });
+
+      if (cancelled) return;
+
+      if (!ok || !data.text) {
+        setQuestionsError(formatAiError(data));
+        return;
+      }
+
       try {
-        const res = await fetch("/api/ai", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            prompt: `
-You are EquityLens AI.
-
-You are an institutional equity research analyst.
-
-Generate research data for ${company}.
-
-Return ONLY valid JSON.
-
-{
-  "overview": "",
-  "questions": [
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    ""
-  ]
-}
-
-Rules:
-- overview should be under 150 words.
-
-
-- Generate exactly 8 short questions:
-
-- Maximum 8 words each.
-- Sound like Perplexity suggested prompts.
-- Suitable for retail investors.
-- Avoid jargon.
-- Avoid compound questions.
-- Each question should explore a different aspect.
-
-Return JSON only.
-- No markdown.
-- No explanations.
-- Return JSON only.
-`,
-          }),
-        });
-
-        const data = await res.json();
-        console.log(data);
-
         const cleaned = data.text
           .replace(/```json/g, "")
           .replace(/```/g, "")
           .trim();
 
         const parsed = JSON.parse(cleaned);
-
-        setSummary(parsed.overview);
-        setQuestions(parsed.questions);
+        setQuestions(parsed.questions ?? []);
       } catch (error) {
         console.error(error);
-        setSummary("Failed to load company research.");
+        setQuestionsError("Failed to parse suggested questions.");
       }
     }
 
     loadCompanyData();
+
+    return () => {
+      cancelled = true;
+    };
   }, [company]);
 
   return (
@@ -116,16 +82,23 @@ Return JSON only.
           Suggested Questions
         </h2>
 
-        <div className="flex flex-wrap gap-3">
-          {questions.map((question, index) => (
-            <button
-              key={index}
-              className="rounded-full border border-zinc-700 px-4 py-2 text-sm hover:bg-zinc-800 transition"
-            >
-              {question}
-            </button>
-          ))}
-        </div>
+        {questionsError ? (
+          <p className="text-sm text-amber-400">{questionsError}</p>
+        ) : questions.length === 0 ? (
+          <p className="text-sm text-zinc-500">Loading suggested questions...</p>
+        ) : (
+          <div className="flex flex-wrap gap-3">
+            {questions.map((question, index) => (
+              <button
+                key={index}
+                onClick={() => setSelectedTopic(question)}
+                className="rounded-full border border-zinc-700 px-4 py-2 text-sm hover:bg-zinc-800 transition"
+              >
+                {question}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
       <ResearchChat 
       company={company}

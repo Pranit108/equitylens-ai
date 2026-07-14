@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { formatAiError, postAi } from "@/lib/fetch-ai";
 
 interface PulseData {
   summary: string;
@@ -28,38 +29,47 @@ export default function ResearchPulse({
 }) {
   const [pulse, setPulse] = useState<PulseData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
+    let cancelled = false;
+
     async function loadPulse() {
+      setLoading(true);
+      setError("");
+
+      const { ok, data } = await postAi("/api/pulse", { company });
+
+      if (cancelled) return;
+
+      if (!ok || !data.text) {
+        setError(formatAiError(data));
+        setLoading(false);
+        return;
+      }
+
       try {
-        const res = await fetch("/api/pulse", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            company,
-          }),
-        });
-
-        const data = await res.json();
-
         const cleaned = data.text
           .replace(/```json/g, "")
           .replace(/```/g, "")
           .trim();
 
-        const parsed = JSON.parse(cleaned);
-
-        setPulse(parsed);
-      } catch (error) {
-        console.error(error);
+        setPulse(JSON.parse(cleaned));
+      } catch (parseError) {
+        console.error(parseError);
+        setError("Failed to parse Research Pulse.");
       } finally {
-        setLoading(false);
+        if (!cancelled) {
+          setLoading(false);
+        }
       }
     }
 
     loadPulse();
+
+    return () => {
+      cancelled = true;
+    };
   }, [company]);
 
   if (loading) {
@@ -79,7 +89,10 @@ export default function ResearchPulse({
   if (!pulse) {
     return (
       <section className="mt-10 rounded-xl border border-red-900 bg-red-950/20 p-6">
-        Failed to generate Research Pulse.
+        <h2 className="text-2xl font-bold">Research Pulse</h2>
+        <p className="mt-3 text-sm text-red-200">
+          {error || "Failed to generate Research Pulse."}
+        </p>
       </section>
     );
   }
