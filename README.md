@@ -31,8 +31,8 @@ AI-powered equity research platform built with Next.js and Gemini.
 
 ## Screenshots
 
-*(Add screenshots here later.)*
 
+<img width="1710" height="984" alt="Screenshot 2026-07-14 at 5 07 30 PM" src="https://github.com/user-attachments/assets/4ab5902f-9222-4ac1-aacb-7fecc7e57322" /><img width="1689" height="801" alt="Screenshot 2026-07-14 at 5 07 39 PM" src="https://github.com/user-attachments/assets/09d624bf-9206-4995-b7d8-52de5b5a4eb0" />
 ---
 
 ## Running Locally
