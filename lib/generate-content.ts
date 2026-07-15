@@ -1,6 +1,6 @@
 import { ai } from "@/lib/gemini";
 
-const MODEL = process.env.GEMINI_MODEL ?? "gemini-flash-latest";
+const MODEL = process.env.GEMINI_MODEL ?? "gemini-3.1-flash-lite";
 
 const inflight = new Map<string, Promise<string>>();
 
