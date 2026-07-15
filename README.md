@@ -2,7 +2,7 @@
 
 AI-powered equity research platform built with Next.js and Gemini.
 
-**Live Demo:** https://equitylens-hnm6e8g8z-pranitberry.vercel.app/
+**Live Demo:** equitylens-ai-taupe.vercel.app
 
 ---
 
